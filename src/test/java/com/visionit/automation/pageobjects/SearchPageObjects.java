@@ -32,8 +32,8 @@ public class SearchPageObjects {
 	public void validateSearchPageTitle() {
 		
 		WebDriverWait webDriverWait1 = new WebDriverWait(driver,20);
-		webDriverWait1.until(ExpectedConditions.titleIs("Amazon.in : Laptop"));
-		Assert.assertEquals("Page Title Validation", "Amazon.in : Laptop", driver.getTitle());
+		webDriverWait1.until(ExpectedConditions.titleContains("Amazon.in"));
+		Assert.assertEquals("Page Title Validation", true, driver.getTitle().contains("Amazon.in"));
         scn.log("Page title validation successfull: " + driver.getTitle());
         logger.info("Page title validation successfull: " + driver.getTitle());
 

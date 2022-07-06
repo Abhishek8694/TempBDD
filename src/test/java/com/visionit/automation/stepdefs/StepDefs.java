@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -64,12 +66,23 @@ public class StepDefs {
     // make sure to use this after import io.cucumber.java.After;
     // Use @After to execute steps to be executed after each scnerio
     // one example can be to close the browser
-    @After
+    @After(order=1)
     public void cleanUp(){
-        driver.quit();
-        logger.info("Browser Closed");
+        WebDriverFactory.quitDriver();
+        scn.log("Browser Closed");
     }
 	
+    
+    @After(order=2)
+    public void takeScreenShot(Scenario s) {
+        if (s.isFailed()) {
+            TakesScreenshot scrnShot = (TakesScreenshot)driver;
+            byte[] data = scrnShot.getScreenshotAs(OutputType.BYTES);
+            scn.attach(data, "image/png","Failed Step Name: " + s.getName());
+        }else{
+            scn.log("Test case is passed, no screen shot captured");
+        }
+    }
 
 //		@Given("User opened a browser")
 //		public void user_opened_a_browser() {
